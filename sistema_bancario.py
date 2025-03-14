@@ -32,7 +32,10 @@ def criar_usuario(usuarios):
     }
 
     usuarios[CPF] = usuario
-    criar_conta_corrente(usuarios)
+
+    print(f'Nome: {usuario['nome']} com o CPF: {usuario['cpf']} nascido em {usuario['data_nascimento']} resitende em {usuario['endereco']} ')
+    input('Precione qualquer tecla para continuar')
+    return usuarios
 
 def consulta_cep(cep):
     cep = str(cep)
@@ -71,6 +74,9 @@ def criar_conta_corrente(usuarios):
             }
 
             usuarios[cpf]={}
+
+            input('Precione qualquer tecla para continuar')
+
 
             if 'contas' not in usuarios[cpf]:
                 usuarios[cpf]['contas'] = []
@@ -169,64 +175,60 @@ def extrato(saldo,/, list_deposito, list_saque):
 #position saldo
 #nomerados extrato
 
-def menu():
+def main():
     list_deposito =[]
     saldo = 0
     LIMITE_DE_SAQUE_DIARIO = 4
     VALOR_MAXIMO_SAQUE = 500
 
-
     while True:
-
         escolha = int(input('''
         -----------Bem vindo ao PyBank----------
                         **MENU**
         
             Escolha a opção que deseja
+                            
+            1) cadastro de Usuario
+                        
+            2) Criação de Conta corrente
         
-            1) Deposito
+            3) Deposito
                             
-            2) Saque
+            4) Saque
                             
-            3) Extrato
+            5) Extrato
                             
         ########################################                        
 
             0) Sair
                 
         -- '''))
-       
-        
+
         if escolha == 1:
+            usuarios =  criar_usuario(usuarios={})
+
+        elif escolha == 2:
+            criar_conta_corrente(usuarios)
+        
+        elif escolha == 3:
             valor = float(input('Entre com o valor a ser depositado R$: ').strip())
             list_deposito, saldo = deposito(saldo, valor, list_deposito)
 
-        elif escolha == 2:
+        elif escolha == 4:
             print('====================Saque===================')
             print(f'Saldo atual:               R$ {saldo:.2f}')
             valor = float(input('Digite valor de saque R$: ').strip())
             list_saque, saldo = saque(saldo=saldo, valor=valor, limite_saque=LIMITE_DE_SAQUE_DIARIO, list_saque=[], valor_saque=VALOR_MAXIMO_SAQUE)
         
-        elif escolha == 3:
+        elif escolha == 5:
             extrato(saldo,list_deposito=list_deposito,list_saque=list_saque)
+
         elif escolha == 0:
             print('Obrigado por ter usado o nosso sistema!!!')
-            return False 
+            break 
+        
         else:
             print('Entre com uma opção valida!!!')
             input('Precione qualquer tecla para continuar')
 
-def primeiro_acesso():
-    acesso = input('Este é  o seu  primeiro acesso Y/N: ').upper().strip()
-    if acesso == 'Y':
-        criar_usuario(usuarios={})
-    elif acesso == 'N':
-        return True
-    else:
-        return False
-
-        
-while True:
-    if primeiro_acesso() != False:
-        menu()
-        break
+main()
